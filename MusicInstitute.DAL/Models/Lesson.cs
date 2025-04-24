@@ -19,6 +19,8 @@ public partial class Lesson
 
     public int DurationMinutes { get; set; }
 
+    public bool IsAvailable { get; set; }
+
     public virtual Student StudentIdLessonsNavigation { get; set; } = null!;
 
     public virtual Teacher TeacherIdLessonsNavigation { get; set; } = null!;

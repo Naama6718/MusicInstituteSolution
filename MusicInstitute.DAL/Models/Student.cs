@@ -22,6 +22,4 @@ public partial class Student
     public string StudentPassword { get; set; } = null!;
 
     public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
-
-    public virtual ICollection<GroupLesson> GroupLessons { get; set; } = new List<GroupLesson>();
 }
