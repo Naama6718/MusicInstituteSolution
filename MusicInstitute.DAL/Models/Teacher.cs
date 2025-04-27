@@ -17,7 +17,11 @@ public partial class Teacher
 
     public string Email { get; set; } = null!;
 
-    public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
+    public virtual ICollection<AvailableLesson> AvailableLessons { get; set; } = new List<AvailableLesson>();
+
+    public virtual ICollection<BookedLesson> BookedLessons { get; set; } = new List<BookedLesson>();
+
+    public virtual ICollection<PassedLesson> PassedLessons { get; set; } = new List<PassedLesson>();
 
     public virtual ICollection<Instrument> Instruments { get; set; } = new List<Instrument>();
 }

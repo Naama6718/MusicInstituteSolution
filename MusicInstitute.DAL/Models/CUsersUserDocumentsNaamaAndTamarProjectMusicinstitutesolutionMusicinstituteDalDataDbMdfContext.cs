@@ -15,9 +15,13 @@ public partial class CUsersUserDocumentsNaamaAndTamarProjectMusicinstitutesoluti
     {
     }
 
+    public virtual DbSet<AvailableLesson> AvailableLessons { get; set; }
+
+    public virtual DbSet<BookedLesson> BookedLessons { get; set; }
+
     public virtual DbSet<Instrument> Instruments { get; set; }
 
-    public virtual DbSet<Lesson> Lessons { get; set; }
+    public virtual DbSet<PassedLesson> PassedLessons { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
 
@@ -25,10 +29,44 @@ public partial class CUsersUserDocumentsNaamaAndTamarProjectMusicinstitutesoluti
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\User\\Documents\\naama and tamar project\\MusicInstituteSolution\\MusicInstitute.DAL\\data\\DB.mdf\";Integrated Security=True");
+        => optionsBuilder.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename='C:\\Users\\User\\Documents\\naama and tamar project\\MusicInstituteSolution\\MusicInstitute.DAL\\data\\DB.mdf';Integrated Security=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AvailableLesson>(entity =>
+        {
+            entity.HasKey(e => e.LessonId).HasName("PK__Availabl__B084ACD065CC0C6A");
+
+            entity.ToTable("Available_Lessons");
+
+            entity.Property(e => e.TeacherIdLessons).HasColumnName("TeacherId_Lessons");
+
+            entity.HasOne(d => d.TeacherIdLessonsNavigation).WithMany(p => p.AvailableLessons)
+                .HasForeignKey(d => d.TeacherIdLessons)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Available_Lessons_ToTable");
+        });
+
+        modelBuilder.Entity<BookedLesson>(entity =>
+        {
+            entity.HasKey(e => e.LessonId).HasName("PK__Booked_L__B084ACD07A775E64");
+
+            entity.ToTable("Booked_Lessons");
+
+            entity.Property(e => e.StudentIdLessons).HasColumnName("StudentId_Lessons");
+            entity.Property(e => e.TeacherIdLessons).HasColumnName("TeacherId_Lessons");
+
+            entity.HasOne(d => d.StudentIdLessonsNavigation).WithMany(p => p.BookedLessons)
+                .HasForeignKey(d => d.StudentIdLessons)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Booked_Lessons_ToTable1");
+
+            entity.HasOne(d => d.TeacherIdLessonsNavigation).WithMany(p => p.BookedLessons)
+                .HasForeignKey(d => d.TeacherIdLessons)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Booked_Lessons_ToTable");
+        });
+
         modelBuilder.Entity<Instrument>(entity =>
         {
             entity.HasKey(e => e.InstrumentId).HasName("PK__Instrume__430A53863BC0E3FC");
@@ -56,22 +94,24 @@ public partial class CUsersUserDocumentsNaamaAndTamarProjectMusicinstitutesoluti
                     });
         });
 
-        modelBuilder.Entity<Lesson>(entity =>
+        modelBuilder.Entity<PassedLesson>(entity =>
         {
-            entity.HasKey(e => e.LessonId).HasName("PK__Lessons__B084ACD097BD49F8");
+            entity.HasKey(e => e.LessonId).HasName("PK__Passed_L__B084ACD0048A6527");
+
+            entity.ToTable("Passed_Lessons");
 
             entity.Property(e => e.StudentIdLessons).HasColumnName("StudentId_Lessons");
             entity.Property(e => e.TeacherIdLessons).HasColumnName("TeacherId_Lessons");
 
-            entity.HasOne(d => d.StudentIdLessonsNavigation).WithMany(p => p.Lessons)
+            entity.HasOne(d => d.StudentIdLessonsNavigation).WithMany(p => p.PassedLessons)
                 .HasForeignKey(d => d.StudentIdLessons)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Lessons_ToTable1");
+                .HasConstraintName("FK_Passed_Lessons_ToTable1");
 
-            entity.HasOne(d => d.TeacherIdLessonsNavigation).WithMany(p => p.Lessons)
+            entity.HasOne(d => d.TeacherIdLessonsNavigation).WithMany(p => p.PassedLessons)
                 .HasForeignKey(d => d.TeacherIdLessons)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Lessons_ToTable");
+                .HasConstraintName("FK_Passed_Lessons_ToTable");
         });
 
         modelBuilder.Entity<Student>(entity =>

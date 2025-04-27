@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MusicInstitute.DAL.Models;
 
-public partial class Lesson
+public partial class BookedLesson
 {
     public int LessonId { get; set; }
 
@@ -18,8 +18,6 @@ public partial class Lesson
     public int TeacherIdLessons { get; set; }
 
     public int DurationMinutes { get; set; }
-
-    public bool IsAvailable { get; set; }
 
     public virtual Student StudentIdLessonsNavigation { get; set; } = null!;
 
