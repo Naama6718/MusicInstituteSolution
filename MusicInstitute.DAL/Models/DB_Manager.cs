@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MusicInstitute.DAL.Models;
 
-public partial class CUsersUserDocumentsNaamaAndTamarProjectMusicinstitutesolutionMusicinstituteDalDataDbMdfContext : DbContext
+public partial class DB_Manager : DbContext
 {
-    public CUsersUserDocumentsNaamaAndTamarProjectMusicinstitutesolutionMusicinstituteDalDataDbMdfContext()
+    public DB_Manager()
     {
     }
 
-    public CUsersUserDocumentsNaamaAndTamarProjectMusicinstitutesolutionMusicinstituteDalDataDbMdfContext(DbContextOptions<CUsersUserDocumentsNaamaAndTamarProjectMusicinstitutesolutionMusicinstituteDalDataDbMdfContext> options)
+    public DB_Manager(DbContextOptions<DB_Manager> options)
         : base(options)
     {
     }

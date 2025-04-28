@@ -5,8 +5,8 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace MusicInstitute.DAL.Api
-//{
+namespace MusicInstitute.DAL.Api
+{
 //    internal interface ILessons
 //    {
 //        Task AddLesson(Lesson lesson);
@@ -18,4 +18,4 @@
 //        IEnumerable<Lesson> GetLessonsByDate(DateTime date);
 
 //    }
-//}
+}
