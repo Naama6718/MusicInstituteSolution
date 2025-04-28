@@ -5,8 +5,8 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace MusicInstitute.DAL.Api
-//{
+namespace MusicInstitute.DAL.Api
+{
 //    internal interface IStudent
 //    {
 //        Task<List<Student>> GetAllStudent();
@@ -22,4 +22,4 @@
 //        IDictionary<int, int> GetStudentStatisticsByLevel();
 
 //    }
-//}
+}

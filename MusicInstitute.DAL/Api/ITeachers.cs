@@ -5,8 +5,8 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace MusicInstitute.DAL.Api
-//{
+namespace MusicInstitute.DAL.Api
+{
 //    internal interface ITeachers
 //    {
 //        Task<List<Teacher>> GetAllTeachers();
@@ -25,4 +25,4 @@
 //        IEnumerable<Teacher> GetTeachersByInstrument(string instrument);
 //        IEnumerable<Teacher> GetTeachersByExperience(int minYears, int maxYe);
 //    }
-//}
+}
