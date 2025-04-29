@@ -7,7 +7,9 @@ public partial class Teacher
 {
     public int TeacherId { get; set; }
 
-    public string FullName { get; set; } = null!;
+    public string FirstName { get; set; } = null!;
+
+    public string LastName { get; set; } = null!;
 
     public string Phone { get; set; } = null!;
 

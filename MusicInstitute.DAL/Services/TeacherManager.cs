@@ -6,8 +6,8 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace MusicInstitute.DAL.Services
-//{
+namespace MusicInstitute.DAL.Services
+{
 //    internal class TeacherManager : ITeachers
 //    {
 //        private readonly DB_Manager _dbContext;
@@ -117,4 +117,4 @@
 //            await Task.CompletedTask;
 //        }
 //    }
-//}
+}

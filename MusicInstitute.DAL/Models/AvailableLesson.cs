@@ -11,7 +11,7 @@ public partial class AvailableLesson
 
     public TimeOnly LessonTime { get; set; }
 
-    public int Kind { get; set; }
+    public string Kind { get; set; } = null!;
 
     public int TeacherIdLessons { get; set; }
 
