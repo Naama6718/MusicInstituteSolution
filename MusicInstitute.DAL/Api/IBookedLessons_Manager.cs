@@ -7,6 +7,7 @@ namespace MusicInstitute.DAL.Api
         Task AddLesson(BookedLesson lesson);
         Task<List<BookedLesson>> GetAllBookedLesson();
         Task<List<BookedLesson>> GetLessonsByStudent(string studentName);
+        Task<List<BookedLesson>> GetLessonsByInstrument(string instrumentName);
         Task<List<BookedLesson>> GetLessonsByTeacher(string teacherName);
         Task<bool> RemoveLesson(int lessonId);
     }

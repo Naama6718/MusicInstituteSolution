@@ -53,6 +53,15 @@ namespace MusicInstitute.DAL.Services
                 .Where(l => l.TeacherIdLessonsNavigation.FirstName + " " + l.TeacherIdLessonsNavigation.LastName == teacherName)
                 .ToListAsync();
         }
+
+
+        public async Task<List<BookedLesson>> GetLessonsByInstrument(string instrumentName)
+        {
+            return await _dbManager.BookedLessons
+                .Where(i => i.Kind.Equals(instrumentName))
+                .ToListAsync();
+        }
+
         public async Task<List<BookedLesson>> GetLessonsByStudent(string studentName)
         {
             return await _dbManager.BookedLessons

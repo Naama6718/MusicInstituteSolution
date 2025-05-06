@@ -36,7 +36,14 @@ namespace MusicInstitute.DAL.Services
         public async Task<List<PassedLesson>> GetLessonsByTeacher(string teacherName)
         {
             return await _dbManager.PassedLessons
-                .Where(l => l.TeacherIdLessonsNavigation.FullName == teacherName)
+                .Where(l => l.TeacherIdLessonsNavigation.FirstName+l.TeacherIdLessonsNavigation.LastName == teacherName)
+                .ToListAsync();
+        }
+
+        public async Task<List<PassedLesson>> GetLessonsByInstrument(string instumentName)
+        {
+            return await _dbManager.PassedLessons
+                .Where(i => i.Kind.Equals(instumentName))
                 .ToListAsync();
         }
 
