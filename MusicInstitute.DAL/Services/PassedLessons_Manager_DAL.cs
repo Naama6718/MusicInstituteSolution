@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MusicInstitute.DAL.Services
 {
-    internal class PassedLessons_Manager : IPassedLessons_Manager
+    internal class PassedLessons_Manager_DAL : IPassedLessons_Manager_DAL
     {
         private readonly DB_Manager _dbManager;
 
-        public PassedLessons_Manager(DB_Manager dbManager)
+        public PassedLessons_Manager_DAL(DB_Manager dbManager)
         {
             _dbManager = dbManager;
         }
@@ -36,7 +36,7 @@ namespace MusicInstitute.DAL.Services
         public async Task<List<PassedLesson>> GetLessonsByTeacher(string teacherName)
         {
             return await _dbManager.PassedLessons
-                .Where(l => l.TeacherIdLessonsNavigation.FirstName+l.TeacherIdLessonsNavigation.LastName == teacherName)
+                .Where(l => l.TeacherIdLessonsNavigation.FirstName + l.TeacherIdLessonsNavigation.LastName == teacherName)
                 .ToListAsync();
         }
 

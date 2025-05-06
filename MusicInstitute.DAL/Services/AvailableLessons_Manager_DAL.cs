@@ -4,13 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MusicInstitute.DAL.Api;
 namespace MusicInstitute.DAL.Services
 {
-    internal class AvailableLessons_Manager : IAvailableLessons_Manager
+    internal class AvailableLessons_Manager_DAL : IAvailableLessons_Manager_DAL
     {
         private readonly DB_Manager _dbManager;
 
-        public AvailableLessons_Manager(DB_Manager dbManager)
+        public AvailableLessons_Manager_DAL(DB_Manager dbManager)
         {
             _dbManager = dbManager;
         }
@@ -49,7 +50,7 @@ namespace MusicInstitute.DAL.Services
         public async Task<List<AvailableLesson>> GetLessonsByTeacher(string teacherName)
         {
             return await _dbManager.AvailableLessons
-                .Where(l => l.TeacherIdLessonsNavigation.FirstName+ l.TeacherIdLessonsNavigation.LastName == teacherName)
+                .Where(l => l.TeacherIdLessonsNavigation.FirstName + l.TeacherIdLessonsNavigation.LastName == teacherName)
                 .ToListAsync();
         }
 

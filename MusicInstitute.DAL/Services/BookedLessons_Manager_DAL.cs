@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace MusicInstitute.DAL.Services
 {
-    internal class BookedLessons_Manager : IBookedLessons_Manager
+    internal class BookedLessons_Manager_DAL : IBookedLessons_Manager_DAL
     {
         private readonly DB_Manager _dbManager;
-        public BookedLessons_Manager(DB_Manager dbManager)
+        public BookedLessons_Manager_DAL(DB_Manager dbManager)
         {
             _dbManager = dbManager;
         }
