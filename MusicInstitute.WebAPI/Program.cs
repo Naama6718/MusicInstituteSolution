@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MusicInstitute.DAL.Api;
 using MusicInstitute.BL.Api;
+using MusicInstitute.BL.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
 // ? 2. שימוש בשכבות:
 // הוספת AutoMapper
@@ -21,9 +23,13 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 // הוספת שכבת BL ו-DAL
 builder.Services.AddScoped<Instrument_Manager_BL>();
 builder.Services.AddScoped<Instrument_Manager_DAL>();
+builder.Services.AddScoped<Student_Manager_BL>();
+builder.Services.AddScoped<Students_Manager_DAL>();
 
 builder.Services.AddScoped<IInstrument_Manager_DAL, Instrument_Manager_DAL>();
 builder.Services.AddScoped<IInstrument_Manager_BL, Instrument_Manager_BL>();
+builder.Services.AddScoped<IStudents_Manager_DAL, Students_Manager_DAL>();
+builder.Services.AddScoped<IStudent_Manager_BL, Student_Manager_BL>();
 
 // ? 3. הגדרת קישור למסד נתונים
 builder.Services.AddDbContext<DB_Manager>(options =>
