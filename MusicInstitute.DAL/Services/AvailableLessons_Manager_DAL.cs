@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using MusicInstitute.DAL.Api;
 namespace MusicInstitute.DAL.Services
 {
-    internal class AvailableLessons_Manager_DAL : IAvailableLessons_Manager_DAL
+    public class AvailableLessons_Manager_DAL : IAvailableLessons_Manager_DAL
     {
         private readonly DB_Manager _dbManager;
 

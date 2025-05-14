@@ -2,7 +2,7 @@
 
 namespace MusicInstitute.DAL.Api
 {
-    internal interface IPassedLessons_Manager_DAL
+    public interface IPassedLessons_Manager_DAL
     {
         Task AddLesson(PassedLesson lesson);
         Task<List<PassedLesson>> GetAllLessons();

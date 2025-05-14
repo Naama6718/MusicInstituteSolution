@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MusicInstitute.DAL.Services
 {
-    internal class Teacher_Manager_DAL : ITeacher_Manager_DAL
+    public class Teacher_Manager_DAL : ITeacher_Manager_DAL
     {
         private readonly DB_Manager _dbManager;
         public Teacher_Manager_DAL()

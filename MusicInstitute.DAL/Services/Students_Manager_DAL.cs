@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MusicInstitute.DAL.Services
 {
-    internal class Students_Manager_DAL : IStudents_Manager_DAL
+    public class Students_Manager_DAL : IStudents_Manager_DAL
     {
         private readonly DB_Manager _dbManager;
 

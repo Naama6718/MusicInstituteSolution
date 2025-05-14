@@ -2,7 +2,7 @@
 
 namespace MusicInstitute.DAL.Api
 {
-    internal interface ITeacher_Manager_DAL
+    public interface ITeacher_Manager_DAL
     {
         Task AddTeacher(Student teacher);
         Task DeleteTeacher(int teacherId);
