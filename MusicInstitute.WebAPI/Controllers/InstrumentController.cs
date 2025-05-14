@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MusicInstitute.BL.Api;
-using MusicInstitute.BL.Mapping;
+using MusicInstitute.BL.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

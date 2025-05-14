@@ -1,6 +1,6 @@
-﻿namespace MusicInstitute.BL.Mapping
+﻿namespace MusicInstitute.BL.Models
 {
-    public class PassedLessonDTO
+    public class BookedLessonDTO
     {
         public int LessonId { get; set; }
         public DateOnly LessonDate { get; set; }

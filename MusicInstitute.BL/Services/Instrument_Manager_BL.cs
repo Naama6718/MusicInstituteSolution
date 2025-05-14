@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MusicInstitute.BL.Mapping;
 using MusicInstitute.DAL.Api;
 using MusicInstitute.BL.Services;
+using MusicInstitute.BL.Models;
 
 namespace MusicInstitute.BL.Api
 {

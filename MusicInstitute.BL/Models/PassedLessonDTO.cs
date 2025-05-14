@@ -1,15 +1,20 @@
-﻿namespace MusicInstitute.BL.Mapping
+﻿namespace MusicInstitute.BL.Models
 {
-    public class AvailableLessonDTO
+    public class PassedLessonDTO
     {
         public int LessonId { get; set; }
         public DateOnly LessonDate { get; set; }
         public TimeOnly LessonTime { get; set; }
         public string Kind { get; set; } = null!;
+        public int StudentIdLessons { get; set; }
         public int TeacherIdLessons { get; set; }
         public int DurationMinutes { get; set; }
 
-        // אם תצטרך את שם המורה או פרטים אחרים על המורה, אפשר להוסיף אותם
+        // פרטי תלמיד (אם רוצים למפות את המידע של התלמיד)
+        public string StudentFirstName { get; set; } = null!;
+        public string StudentLastName { get; set; } = null!;
+
+        // פרטי מורה (אם רוצים למפות את המידע של המורה)
         public string TeacherFirstName { get; set; } = null!;
         public string TeacherLastName { get; set; } = null!;
     }

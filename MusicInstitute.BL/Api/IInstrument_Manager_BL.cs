@@ -1,4 +1,4 @@
-﻿using MusicInstitute.BL.Mapping;
+﻿using MusicInstitute.BL.Models;
 
 namespace MusicInstitute.BL.Services
 {

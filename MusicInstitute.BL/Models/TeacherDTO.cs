@@ -1,4 +1,4 @@
-﻿namespace MusicInstitute.BL.Mapping
+﻿namespace MusicInstitute.BL.Models
 {
     public class TeacherDTO
     {

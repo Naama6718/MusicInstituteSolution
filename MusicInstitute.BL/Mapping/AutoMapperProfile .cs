@@ -12,12 +12,12 @@ namespace MusicInstitute.BL.Mapping
     {
         public AutoMapperProfile()
         {
-            CreateMap<Instrument, InstrumentDTO>().ReverseMap();
-            CreateMap<Student, StudentDTO>().ReverseMap();
-            CreateMap<Teacher, TeacherDTO>().ReverseMap();
-            CreateMap<AvailableLesson, AvailableLessonDTO>().ReverseMap();
-            CreateMap<BookedLesson, BookedLessonDTO>().ReverseMap();
-            CreateMap<PassedLesson, PassedLessonDTO>().ReverseMap();
+            CreateMap<DAL.Models.Instrument, InstrumentDTO>().ReverseMap();
+            CreateMap<DAL.Models.Student, StudentDTO>().ReverseMap();
+            CreateMap<DAL.Models.Teacher, TeacherDTO>().ReverseMap();
+            CreateMap<DAL.Models.AvailableLesson, AvailableLessonDTO>().ReverseMap();
+            CreateMap<DAL.Models.BookedLesson, BookedLessonDTO>().ReverseMap();
+            CreateMap<DAL.Models.PassedLesson, PassedLessonDTO>().ReverseMap();
         }
     }
 }
