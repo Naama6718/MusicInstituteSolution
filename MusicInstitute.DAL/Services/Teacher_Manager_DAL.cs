@@ -17,20 +17,17 @@ namespace MusicInstitute.DAL.Services
             _dbManager = new DB_Manager();
         }
 
-        async Task<List<Teacher>> GetAllTeachers()
+        public async Task<List<Teacher>> GetAllTeachers()
         {
-            List<Teacher> teachers = await _dbManager.Teachers.ToListAsync();
-            if (teachers == null)
-            {
-                throw new InvalidOperationException("Teachers collection is not initialized.");
-            }
-            return teachers;
+            return await _dbManager.Teachers.ToListAsync();
         }
-        public async Task AddTeacher(Student teacher)
+
+        public async Task AddTeacher(Teacher teacher)
         {
-            await _dbManager.Students.AddAsync(teacher);
+            await _dbManager.Teachers.AddAsync(teacher);
             await _dbManager.SaveChangesAsync();
         }
+
         public async Task DeleteTeacher(int teacherId)
         {
             var existingTeacher = await _dbManager.Teachers.FirstOrDefaultAsync(t => t.TeacherId == teacherId);
@@ -40,6 +37,7 @@ namespace MusicInstitute.DAL.Services
             _dbManager.Teachers.Remove(existingTeacher);
             await _dbManager.SaveChangesAsync();
         }
+
         public async Task<Teacher> GetTeacherById(int teacherId)
         {
             var existingTeacher = await _dbManager.Teachers.FirstOrDefaultAsync(t => t.TeacherId == teacherId);
@@ -48,12 +46,14 @@ namespace MusicInstitute.DAL.Services
 
             return existingTeacher;
         }
+
         public async Task<List<Teacher>> GetTeachersByExperience(int minYears, int maxYears)
         {
             return await _dbManager.Teachers
                 .Where(t => t.ExperienceYears >= minYears && t.ExperienceYears <= maxYears)
                 .ToListAsync();
         }
+
         public async Task<List<Instrument>> GetInstrumentsForTeacherAsync(int teacherId)
         {
             var existingTeacher = await _dbManager.Teachers
@@ -66,14 +66,12 @@ namespace MusicInstitute.DAL.Services
             return existingTeacher.Instruments.ToList();
         }
 
-
         public async Task<int> GetTotalTeachers()
         {
             return await Task.FromResult(_dbManager.Teachers.Count());
         }
 
-
-        public async void ResetPassword(int teacherId, string newPassword)
+        public async Task ResetPassword(int teacherId, string newPassword)
         {
             var existingTeacher = await _dbManager.Teachers
                 .Include(t => t.Instruments)
@@ -81,24 +79,25 @@ namespace MusicInstitute.DAL.Services
 
             if (existingTeacher == null)
                 throw new KeyNotFoundException($"Teacher with ID {teacherId} not found.");
-            existingTeacher.TeacherPassword = newPassword;
-            _dbManager.SaveChanges();
-        }
 
+            existingTeacher.TeacherPassword = newPassword;
+            await _dbManager.SaveChangesAsync();
+        }
 
         public async Task UpdateTeacherAsync(
             int teacherId,
             string currentPassword,
-            string fullName = null,
+            string firstName = null,
+            string lastName = null,
             string phone = null,
             string email = null,
+            string teacherPassword = null,
             int experienceYears = 0,
             List<Instrument> instruments = null,
             List<AvailableLesson> availableLessons = null,
             List<BookedLesson> bookedLessons = null,
             List<PassedLesson> passedLessons = null)
         {
-
             var existingTeacher = await _dbManager.Teachers
                 .Include(t => t.Instruments)
                 .Include(t => t.AvailableLessons)
@@ -111,8 +110,8 @@ namespace MusicInstitute.DAL.Services
                 throw new KeyNotFoundException($"Teacher with ID {teacherId} not found.");
             }
 
-
-            existingTeacher.FullName = fullName ?? existingTeacher.FullName;
+            existingTeacher.FirstName = firstName ?? existingTeacher.FirstName;
+            existingTeacher.LastName = lastName ?? existingTeacher.LastName;
             existingTeacher.Phone = phone ?? existingTeacher.Phone;
             existingTeacher.Email = email ?? existingTeacher.Email;
             existingTeacher.TeacherPassword = teacherPassword ?? existingTeacher.TeacherPassword;
@@ -155,6 +154,21 @@ namespace MusicInstitute.DAL.Services
             }
 
             await _dbManager.SaveChangesAsync();
+        }
+
+        public Task AddTeacher(Student teacher)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITeacher_Manager_DAL.ResetPassword(int teacherId, string newPassword)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateTeacherAsync(int teacherId, string currentPassword, string fullName = null, string phone = null, string email = null, int experienceYears = 0, List<Instrument> instruments = null, List<AvailableLesson> availableLessons = null, List<BookedLesson> bookedLessons = null, List<PassedLesson> passedLessons = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

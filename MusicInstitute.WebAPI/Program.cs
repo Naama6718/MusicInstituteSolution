@@ -1,15 +1,37 @@
+using MusicInstitute.BL.Mapping;
+using MusicInstitute.BL.Services;
+using MusicInstitute.DAL.Models;
+using MusicInstitute.DAL.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using MusicInstitute.DAL.Api;
+using MusicInstitute.BL.Api;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// ? 1. הוספת שירותים למיכל התלות (Dependency Injection)
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// ? 2. שימוש בשכבות:
+// הוספת AutoMapper
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+// הוספת שכבת BL ו-DAL
+builder.Services.AddScoped<Instrument_Manager_BL>();
+builder.Services.AddScoped<Instrument_Manager_DAL>();
+
+builder.Services.AddScoped<IInstrument_Manager_DAL, Instrument_Manager_DAL>();
+builder.Services.AddScoped<IInstrument_Manager_BL, Instrument_Manager_BL>();
+
+// ? 3. הגדרת קישור למסד נתונים
+builder.Services.AddDbContext<DB_Manager>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ? 4. הגדרת צינור הבקשות (Pipeline)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

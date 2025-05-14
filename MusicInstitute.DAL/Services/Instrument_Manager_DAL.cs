@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MusicInstitute.DAL.Services
 {
-   internal class Instrument_Manager_DAL : IInstrument_Manager_DAL
+   public class Instrument_Manager_DAL : IInstrument_Manager_DAL
     {
         private readonly DB_Manager _dbManager;
         public Instrument_Manager_DAL(DB_Manager dbManager)
@@ -34,7 +34,7 @@ namespace MusicInstitute.DAL.Services
         {
             var existingInstrument = await _dbManager.Instruments.FirstOrDefaultAsync(i => i.InstrumentId == instrumentId);
             if (existingInstrument == null)
-                throw new Exception("Student not found");
+                throw new Exception("Instrument not found");
 
             _dbManager.Instruments.Remove(existingInstrument);
             await _dbManager.SaveChangesAsync();

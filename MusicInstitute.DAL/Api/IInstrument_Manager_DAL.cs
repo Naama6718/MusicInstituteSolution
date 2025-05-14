@@ -2,7 +2,7 @@
 
 namespace MusicInstitute.DAL.Api
 {
-    internal interface IInstrument_Manager_DAL
+    public interface IInstrument_Manager_DAL
     {
         Task AddInstrument(Instrument instrument);
         Task AddTeacherInstrument(int instrumentId, Teacher teacher);
