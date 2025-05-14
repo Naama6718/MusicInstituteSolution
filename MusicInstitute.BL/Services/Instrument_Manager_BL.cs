@@ -124,6 +124,18 @@ namespace MusicInstitute.BL.Api
                 throw;
             }
         }
+        public async Task DeleteTeacherFromInstrumentAsync(int instrumentId, int teacherId)
+        {
+            ;
 
+            var allInstruments = await _instrumentManagerDAL.GetAllInstruments();
+            var instrument = allInstruments.FirstOrDefault(i => i.InstrumentId == instrumentId);
+            if (instrument == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+        }
     }
 }
+    

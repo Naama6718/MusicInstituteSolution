@@ -92,11 +92,8 @@ namespace MusicInstitute.DAL.Services
             string phone = null,
             string email = null,
             string teacherPassword = null,
-            int experienceYears = 0,
-            List<Instrument> instruments = null,
-            List<AvailableLesson> availableLessons = null,
-            List<BookedLesson> bookedLessons = null,
-            List<PassedLesson> passedLessons = null)
+            int experienceYears = 0
+           )
         {
             var existingTeacher = await _dbManager.Teachers
                 .Include(t => t.Instruments)
@@ -117,41 +114,8 @@ namespace MusicInstitute.DAL.Services
             existingTeacher.TeacherPassword = teacherPassword ?? existingTeacher.TeacherPassword;
             existingTeacher.ExperienceYears = experienceYears != 0 ? experienceYears : existingTeacher.ExperienceYears;
 
-            if (instruments != null)
-            {
-                existingTeacher.Instruments.Clear();
-                foreach (var instrument in instruments)
-                {
-                    existingTeacher.Instruments.Add(instrument);
-                }
-            }
-
-            if (availableLessons != null)
-            {
-                existingTeacher.AvailableLessons.Clear();
-                foreach (var lesson in availableLessons)
-                {
-                    existingTeacher.AvailableLessons.Add(lesson);
-                }
-            }
-
-            if (bookedLessons != null)
-            {
-                existingTeacher.BookedLessons.Clear();
-                foreach (var lesson in bookedLessons)
-                {
-                    existingTeacher.BookedLessons.Add(lesson);
-                }
-            }
-
-            if (passedLessons != null)
-            {
-                existingTeacher.PassedLessons.Clear();
-                foreach (var lesson in passedLessons)
-                {
-                    existingTeacher.PassedLessons.Add(lesson);
-                }
-            }
+        
+   
 
             await _dbManager.SaveChangesAsync();
         }
