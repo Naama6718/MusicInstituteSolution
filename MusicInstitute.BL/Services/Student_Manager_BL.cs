@@ -26,13 +26,19 @@ namespace MusicInstitute.BL.Services
             _emailService = emailService;
 
         }
-        // פונקציה להוספת תלמיד
         public async Task AddStudent(StudentDTO studentDTO)
         {
             if (string.IsNullOrEmpty(studentDTO.FirstName) || string.IsNullOrEmpty(studentDTO.LastName))
             {
                 throw new ArgumentException("First name and last name cannot be null or empty.");
             }
+
+            // ודא שיש סיסמה
+            if (string.IsNullOrEmpty(studentDTO.StudentPassword))
+            {
+                throw new ArgumentException("Student password is required.");
+            }
+
             try
             {
                 // מיפוי מ-DTO ל-Entity

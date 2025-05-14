@@ -15,5 +15,7 @@
         public string Instrument { get; set; } = null!;
 
         public int Level { get; set; }
+        public string StudentPassword { get; set; } = null!;
+
     }
 }
