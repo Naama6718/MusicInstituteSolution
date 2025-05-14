@@ -18,46 +18,46 @@ namespace MusicInstitute.WebAPI.Controllers
             }
 
             // שלב 1 - בקשה לאיפוס סיסמה (שליחת קוד לאימייל)
-            [HttpPost("request")]
-            public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetModel model)
-            {
-                if (string.IsNullOrEmpty(model.Email))
-                {
-                    return BadRequest("Email is required.");
-                }
+            //[HttpPost("request")]
+            //public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetModel model)
+            //{
+            //    if (string.IsNullOrEmpty(model.Email))
+            //    {
+            //        return BadRequest("Email is required.");
+            //    }
 
-                try
-                {
+            //    try
+            //    {
                     // קריאה לשליחת קוד איפוס
-                    await _Student_Manager_BL.RequestPasswordResetAsync(model.Email);
-                    return Ok("קוד איפוס נשלח למייל שלך.");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest($"אירעה שגיאה: {ex.Message}");
-                }
-            }
+            //        await _Student_Manager_BL.RequestPasswordResetAsync(model.Email);
+            //        return Ok("קוד איפוס נשלח למייל שלך.");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        return BadRequest($"אירעה שגיאה: {ex.Message}");
+            //    }
+            //}
 
             // שלב 2 - אישור קוד איפוס סיסמה ועדכון הסיסמה
-            [HttpPost("confirm")]
-            public async Task<IActionResult> ConfirmPasswordReset([FromBody] PasswordResetRequest model)
-            {
-                if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.VerificationCode) || string.IsNullOrEmpty(model.NewPassword))
-                {
-                    return BadRequest("All fields are required.");
-                }
+            //[HttpPost("confirm")]
+            //public async Task<IActionResult> ConfirmPasswordReset([FromBody] PasswordResetRequest model)
+            //{
+            //    if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.VerificationCode) || string.IsNullOrEmpty(model.NewPassword))
+            //    {
+            //        return BadRequest("All fields are required.");
+            //    }
 
-                try
-                {
+            //    try
+            //    {
                     // קריאה לאישור איפוס הסיסמה
-                    await _Student_Manager_BL.ConfirmPasswordResetAsync(model.Email, model.VerificationCode, model.NewPassword);
-                    return Ok("הסיסמה עודכנה בהצלחה.");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest($"אירעה שגיאה: {ex.Message}");
-                }
-            }
+            //        await _Student_Manager_BL.ConfirmPasswordResetAsync(model.Email, model.VerificationCode, model.NewPassword);
+            //        return Ok("הסיסמה עודכנה בהצלחה.");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        return BadRequest($"אירעה שגיאה: {ex.Message}");
+            //    }
+            //}
         }
     }
 

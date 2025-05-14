@@ -114,7 +114,7 @@ namespace MusicInstitute.BL.Services
         }
 
         // פונקציה למחיקת תלמיד
-        public async Task DeleteStudentAsync(int studentId)
+        public async Task DeleteStudent(int studentId)
         {
             try
             {
@@ -128,7 +128,7 @@ namespace MusicInstitute.BL.Services
             }
         }
         // פונקציה לקבלת תלמיד לפי ID
-        public async Task<StudentDTO> GetStudentByIdAsync(int studentId)
+        public async Task<StudentDTO> GetStudentById(int studentId)
         {
             try
             {
@@ -147,7 +147,7 @@ namespace MusicInstitute.BL.Services
             }
         }
         // פונקציה לקבלת תלמיד לפי שם
-        public async Task<StudentDTO> GetStudentByNameAsync(string firstName, string lastName)
+        public async Task<StudentDTO> GetStudentByName(string firstName, string lastName)
         {
             try
             {
@@ -167,7 +167,7 @@ namespace MusicInstitute.BL.Services
             }
         }
         // פונקציה לקבלת תלמיד לפי טלפון
-        public async Task<StudentDTO> GetStudentByPhoneAsync(string phone)
+        public async Task<StudentDTO> GetStudentByPhone(string phone)
         {
             try
             {
@@ -187,7 +187,7 @@ namespace MusicInstitute.BL.Services
             }
         }
         // פונקציה לקבלת תלמיד לפי אימייל
-        public async Task<StudentDTO> GetStudentByEmailAsync(string email)
+        public async Task<StudentDTO> GetStudentByEmail(string email)
         {
             try
             {
@@ -208,7 +208,7 @@ namespace MusicInstitute.BL.Services
         }
         // פונקציה לקבלת תלמיד לפי כלי נגינה
 
-        public async Task<List<StudentDTO>> GetStudentsByInstrumentAsync(string instrument)
+        public async Task<List<StudentDTO>> GetStudentsByInstrument(string instrument)
         {
             try
             {
@@ -228,7 +228,7 @@ namespace MusicInstitute.BL.Services
             }
         }
         // פונקציה לקבלת תלמיד לפי רמה
-        public async Task<List<StudentDTO>> GetStudentsByLevelAsync(int level)
+        public async Task<List<StudentDTO>> GetStudentsByLevel(int level)
         {
             try
             {
@@ -248,7 +248,7 @@ namespace MusicInstitute.BL.Services
             }
         }
         // פונקציה לקבלת תלמיד לפי סיסמה
-        public async Task<StudentDTO> GetStudentByPasswordAsync(string password)
+        public async Task<StudentDTO> GetStudentByPassword(string password)
         {
             try
             {
@@ -268,7 +268,7 @@ namespace MusicInstitute.BL.Services
             }
         }
         // פונקציה לקבלת תלמיד לפי שם וסיסמה
-        public async Task<StudentDTO> GetStudentByNameAndPasswordAsync(string firstName, string lastName, string password)
+        public async Task<StudentDTO> GetStudentByNameAndPassword(string firstName, string lastName, string password)
         {
             try
             {
@@ -287,7 +287,106 @@ namespace MusicInstitute.BL.Services
                 throw;
             }
         }
-        public async Task RequestPasswordResetAsync(string email)
+
+        public async Task<List<string>> GetRareInstruments(int maxStudentCountPerInstrument)
+        {
+            try
+            {
+                var students = await _studentManagerDAL.GetAllStudent();
+                var rareInstruments = students
+                    .GroupBy(s => s.Instrument)
+                    .Where(g => g.Count() <= maxStudentCountPerInstrument)
+                    .Select(g => g.Key)
+                    .ToList();
+
+                return rareInstruments;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+        //public async Task<string> RecommendTeacherAsync(int studentId)
+        //{
+        //    try
+        //    {
+        //        var students = await _studentManagerDAL.GetAllStudent();
+        //        var student = students.FirstOrDefault(s => s.StudentId == studentId);
+        //        if (student == null)
+        //        {
+        //            throw new InvalidOperationException("Student not found.");
+        //        }
+
+        //        var teachers = await _studentManagerDAL.GetAllStudent(); // נדרש DAL מתאים
+
+        //        var match = teachers
+        //            .Where(t => t.Instrument == student.Instrument && t.Level.Contains(student.Level))
+        //            .OrderBy(t => t.CurrentStudentCount)
+        //            .FirstOrDefault();
+
+        //        return match?.Name ?? "No suitable teacher found.";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error: {ex.Message}");
+        //        throw;
+        //    }
+        //}
+
+        public async Task<string> GetMostPopularInstrument()
+        {
+            try
+            {
+                var students = await _studentManagerDAL.GetAllStudent();
+
+                var mostPopular = students
+                    .GroupBy(s => s.Instrument)
+                    .OrderByDescending(g => g.Count())
+                    .FirstOrDefault()?.Key;
+
+                if (mostPopular == null)
+                    throw new InvalidOperationException("No instruments found.");
+
+                return mostPopular;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<List<StudentDTO>> FindSimilarStudents(int studentId)
+        {
+            try
+            {
+                var students = await _studentManagerDAL.GetAllStudent();
+                var referenceStudent = students.FirstOrDefault(s => s.StudentId == studentId);
+
+                if (referenceStudent == null)
+                {
+                    throw new InvalidOperationException("Reference student not found.");
+                }
+
+                var similarStudents = students
+                    .Where(s => s.StudentId != studentId &&
+                                s.Instrument == referenceStudent.Instrument &&
+                                s.Level == referenceStudent.Level)
+                    .ToList();
+
+                return _mapper.Map<List<StudentDTO>>(similarStudents);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+
+        public async Task RequestPasswordReset(string email)
         {
             var students = await _studentManagerDAL.GetAllStudent();
             var student = students.FirstOrDefault(s => s.Email == email);
@@ -310,7 +409,7 @@ namespace MusicInstitute.BL.Services
             await _emailService.SendEmailAsync(email, subject, body);
         }
 
-        public async Task ConfirmPasswordResetAsync(string email, string verificationCode, string newPassword)
+        public async Task ConfirmPasswordReset(string email, string verificationCode, string newPassword)
         {
             if (!_resetRequests.ContainsKey(email))
                 throw new InvalidOperationException("No reset request found for this email.");
