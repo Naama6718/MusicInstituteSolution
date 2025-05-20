@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MusicInstitute.DAL.Services;
 
 namespace MusicInstitute.BL.Services
 {

@@ -1,4 +1,6 @@
 ﻿using MusicInstitute.DAL.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MusicInstitute.DAL.Api
 {
@@ -11,8 +13,8 @@ namespace MusicInstitute.DAL.Api
         Task<Teacher> GetTeacherById(int teacherId);
         Task<List<Teacher>> GetTeachersByExperience(int minYears, int maxYears);
         Task<int> GetTotalTeachers();
-        void ResetPassword(int teacherId, string newPassword);
-        Task UpdateTeacherAsync(int teacherId, string currentPassword, string firstName = null,string lastName=null, string phone = null,
-            string email = null, int experienceYears = 0);
+        Task ResetPassword(int teacherId, string newPassword);
+        Task UpdateTeacherAsync(int teacherId, string currentPassword, string firstName = null, string lastName = null,
+            string phone = null, string email = null, int? experienceYears = null);
     }
 }

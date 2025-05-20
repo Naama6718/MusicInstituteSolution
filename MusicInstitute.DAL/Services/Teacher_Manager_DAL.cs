@@ -4,7 +4,6 @@ using MusicInstitute.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MusicInstitute.DAL.Services
@@ -12,6 +11,7 @@ namespace MusicInstitute.DAL.Services
     public class Teacher_Manager_DAL : ITeacher_Manager_DAL
     {
         private readonly DB_Manager _dbManager;
+
         public Teacher_Manager_DAL()
         {
             _dbManager = new DB_Manager();
@@ -68,18 +68,18 @@ namespace MusicInstitute.DAL.Services
 
         public async Task<int> GetTotalTeachers()
         {
-            return await Task.FromResult(_dbManager.Teachers.Count());
+            return await _dbManager.Teachers.CountAsync();
         }
 
         public async Task ResetPassword(int teacherId, string newPassword)
         {
             var existingTeacher = await _dbManager.Teachers
-                .Include(t => t.Instruments)
                 .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
 
             if (existingTeacher == null)
                 throw new KeyNotFoundException($"Teacher with ID {teacherId} not found.");
 
+            // כאן אפשר להוסיף הצפנת סיסמה בעתיד
             existingTeacher.TeacherPassword = newPassword;
             await _dbManager.SaveChangesAsync();
         }
@@ -91,9 +91,7 @@ namespace MusicInstitute.DAL.Services
             string lastName = null,
             string phone = null,
             string email = null,
-            string teacherPassword = null,
-            int experienceYears = 0
-           )
+            int? experienceYears = null)
         {
             var existingTeacher = await _dbManager.Teachers
                 .Include(t => t.Instruments)
@@ -103,36 +101,20 @@ namespace MusicInstitute.DAL.Services
                 .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
 
             if (existingTeacher == null)
-            {
                 throw new KeyNotFoundException($"Teacher with ID {teacherId} not found.");
-            }
+
+            if (existingTeacher.TeacherPassword != currentPassword)
+                throw new UnauthorizedAccessException("Incorrect current password.");
 
             existingTeacher.FirstName = firstName ?? existingTeacher.FirstName;
             existingTeacher.LastName = lastName ?? existingTeacher.LastName;
             existingTeacher.Phone = phone ?? existingTeacher.Phone;
             existingTeacher.Email = email ?? existingTeacher.Email;
-            existingTeacher.TeacherPassword = teacherPassword ?? existingTeacher.TeacherPassword;
-            existingTeacher.ExperienceYears = experienceYears != 0 ? experienceYears : existingTeacher.ExperienceYears;
 
-        
-   
+            if (experienceYears.HasValue)
+                existingTeacher.ExperienceYears = experienceYears.Value;
 
             await _dbManager.SaveChangesAsync();
-        }
-
-        public Task AddTeacher(Student teacher)
-        {
-            throw new NotImplementedException();
-        }
-
-        void ITeacher_Manager_DAL.ResetPassword(int teacherId, string newPassword)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateTeacherAsync(int teacherId, string currentPassword, string fullName = null, string phone = null, string email = null, int experienceYears = 0, List<Instrument> instruments = null, List<AvailableLesson> availableLessons = null, List<BookedLesson> bookedLessons = null, List<PassedLesson> passedLessons = null)
-        {
-            throw new NotImplementedException();
         }
     }
 }
