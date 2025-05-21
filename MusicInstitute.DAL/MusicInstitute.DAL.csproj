@@ -24,4 +24,10 @@
     <Folder Include="notes\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="data\DB.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
