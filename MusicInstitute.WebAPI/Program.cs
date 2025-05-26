@@ -30,6 +30,8 @@ builder.Services.AddScoped<IInstrument_Manager_DAL, Instrument_Manager_DAL>();
 builder.Services.AddScoped<IInstrument_Manager_BL, Instrument_Manager_BL>();
 builder.Services.AddScoped<IStudents_Manager_DAL, Students_Manager_DAL>();
 builder.Services.AddScoped<IStudent_Manager_BL, Student_Manager_BL>();
+builder.Services.AddScoped<ITeacher_Manager_BL,Teacher_Manager_BL>();
+builder.Services.AddScoped < ITeacher_Manager_DAL, Teacher_Manager_DAL>();
 
 // ? 3. הגדרת קישור למסד נתונים
 builder.Services.AddDbContext<DB_Manager>(options =>
