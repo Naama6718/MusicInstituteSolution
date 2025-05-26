@@ -60,6 +60,12 @@ namespace MusicInstitute.DAL.Services
             return await _dbManager.BookedLessons
                 .Where(i => i.Kind.Equals(instrumentName))
                 .ToListAsync();
+
+        }
+        public async Task<BookedLesson?> GetLessonById(int lessonId)
+        {
+            return await _dbManager.BookedLessons
+                .FirstOrDefaultAsync(l => l.LessonId == lessonId);
         }
 
         public async Task<List<BookedLesson>> GetLessonsByStudent(string studentName)

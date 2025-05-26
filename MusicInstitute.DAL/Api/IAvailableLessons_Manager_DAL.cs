@@ -9,6 +9,7 @@ namespace MusicInstitute.DAL.Api
         Task<List<AvailableLesson>> GetLessonsByDate(DateOnly date);
         Task<List<AvailableLesson>> GetLessonsByInstrumentment(string instrumentName);
         Task<List<AvailableLesson>> GetLessonsByTeacher(string teacherName);
+        Task<AvailableLesson?> GetAvailableLessonById(int lessonId);
         Task<bool> IsLessonAvailable(DateOnly date, TimeOnly time);
         Task<bool> RemoveLesson(int lessonId);
     }

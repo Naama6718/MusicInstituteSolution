@@ -76,6 +76,13 @@ namespace MusicInstitute.DAL.Services
             return !await _dbManager.AvailableLessons
                 .AnyAsync(l => l.LessonDate == date && l.LessonTime == time);
         }
+
+        public async Task<AvailableLesson?> GetAvailableLessonById(int lessonId)
+        {
+            return await _dbManager.AvailableLessons
+                .FirstOrDefaultAsync(l => l.LessonId == lessonId);
+        }
+
     }
 
 }

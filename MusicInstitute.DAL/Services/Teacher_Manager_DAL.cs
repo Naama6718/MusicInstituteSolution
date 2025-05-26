@@ -46,6 +46,15 @@ namespace MusicInstitute.DAL.Services
 
             return existingTeacher;
         }
+        public async Task<Teacher> GetTeacherByName(string name)
+        {
+            var existingTeacher = await _dbManager.Teachers.FirstOrDefaultAsync(t => t.FirstName +" " + t.LastName == name);
+            if (existingTeacher == null)
+                throw new Exception("Teacher not found");
+
+            return existingTeacher;
+        }
+
 
         public async Task<List<Teacher>> GetTeachersByExperience(int minYears, int maxYears)
         {

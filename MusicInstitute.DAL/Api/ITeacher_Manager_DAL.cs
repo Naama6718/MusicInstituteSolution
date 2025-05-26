@@ -11,6 +11,7 @@ namespace MusicInstitute.DAL.Api
         Task<List<Instrument>> GetInstrumentsForTeacherAsync(int teacherId);
         Task<List<Teacher>> GetAllTeachers();
         Task<Teacher> GetTeacherById(int teacherId);
+        Task<Teacher> GetTeacherByName(string name);
         Task<List<Teacher>> GetTeachersByExperience(int minYears, int maxYears);
         Task<int> GetTotalTeachers();
         Task ResetPassword(int teacherId, string newPassword);
