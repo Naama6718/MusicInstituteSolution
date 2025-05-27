@@ -1,4 +1,4 @@
-using MusicInstitute.BL.Mapping;
+using MusicInstitute.BL.Mapping;//tamar
 using MusicInstitute.BL.Services;
 using MusicInstitute.DAL.Models;
 using MusicInstitute.DAL.Services;
@@ -14,7 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
 // ? 2. שימוש בשכבות:
 // הוספת AutoMapper
@@ -26,6 +25,7 @@ builder.Services.AddScoped<Instrument_Manager_BL>();
 builder.Services.AddScoped<Instrument_Manager_DAL>();
 builder.Services.AddScoped<Student_Manager_BL>();
 builder.Services.AddScoped<Students_Manager_DAL>();
+builder.Services.AddScoped<PasswordResetService>();
 builder.Services.AddScoped<AvailableLessons_Manager_BL>();
 builder.Services.AddScoped<AvailableLessons_Manager_DAL>();
 
@@ -41,6 +41,9 @@ builder.Services.AddScoped<IBookedLessons_Manager_BL, BookedLessons_Manager_BL>(
 builder.Services.AddScoped<IBookedLessons_Manager_DAL, BookedLessons_Manager_DAL>();
 builder.Services.AddScoped<IPassedLessons_Manager_BL, PassedLessons_Manager_BL>();
 builder.Services.AddScoped<IPassedLessons_Manager_DAL, PassedLessons_Manager_DAL>();
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+
 
 // ? 3. הגדרת קישור למסד נתונים
 builder.Services.AddDbContext<DB_Manager>(options =>

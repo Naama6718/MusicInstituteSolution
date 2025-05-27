@@ -385,54 +385,15 @@ namespace MusicInstitute.BL.Services
             }
         }
 
-
-        public async Task RequestPasswordReset(string email)
+        public async Task<bool> ChangePasswordByEmail(string email, string newPassword)
         {
             var students = await _studentManagerDAL.GetAllStudent();
             var student = students.FirstOrDefault(s => s.Email == email);
             if (student == null)
-                throw new InvalidOperationException("Student not found.");
+                return false;
 
-            var verificationCode = new Random().Next(100000, 999999).ToString(); // 6 ספרות
-            var request = new PasswordResetRequest
-            {
-                Email = email,
-                VerificationCode = verificationCode,
-                Expiration = DateTime.UtcNow.AddMinutes(10)
-            };
-
-            _resetRequests[email] = request;
-
-            string subject = "Password Reset Code - Music Institute";
-            string body = $"Hello {student.FirstName},\n\nYour password reset code is: {verificationCode}\nThis code is valid for 10 minutes.\n\nThanks,\nMusic Institute 🎵";
-
-            await _emailService.SendEmailAsync(email, subject, body);
-        }
-
-        public async Task ConfirmPasswordReset(string email, string verificationCode, string newPassword)
-        {
-            if (!_resetRequests.ContainsKey(email))
-                throw new InvalidOperationException("No reset request found for this email.");
-
-            var request = _resetRequests[email];
-
-            if (request.Expiration < DateTime.UtcNow)
-            {
-                _resetRequests.Remove(email);
-                throw new InvalidOperationException("Verification code has expired.");
-            }
-
-            if (request.VerificationCode != verificationCode)
-                throw new InvalidOperationException("Invalid verification code.");
-
-            var students = await _studentManagerDAL.GetAllStudent();
-            var student = students.FirstOrDefault(s => s.Email == email);
-            if (student == null)
-                throw new InvalidOperationException("Student not found.");
-
-            await _studentManagerDAL.UpdateStudent(student.StudentId, student.StudentPassword, student.FirstName, student.LastName, student.Phone, student.Email, student.Instrument, student.Level, newPassword);
-
-            _resetRequests.Remove(email);
+            // קורא לפונקציה ב-DAL לשינוי סיסמה
+            return await _studentManagerDAL.UpdateStudentPassword(student.StudentId, newPassword);
         }
 
 

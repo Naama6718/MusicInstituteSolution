@@ -6,58 +6,76 @@ using MusicInstitute.DAL.Api;
 
 namespace MusicInstitute.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class PasswordResetController : ControllerBase
     {
-            private readonly Student_Manager_BL _Student_Manager_BL;
+        private readonly PasswordResetService _passwordResetService;
 
-            public PasswordResetController(Student_Manager_BL studentmanager_BL)
-            {
-              _Student_Manager_BL = studentmanager_BL;
-            }
-
-            // שלב 1 - בקשה לאיפוס סיסמה (שליחת קוד לאימייל)
-            //[HttpPost("request")]
-            //public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetModel model)
-            //{
-            //    if (string.IsNullOrEmpty(model.Email))
-            //    {
-            //        return BadRequest("Email is required.");
-            //    }
-
-            //    try
-            //    {
-                    // קריאה לשליחת קוד איפוס
-            //        await _Student_Manager_BL.RequestPasswordResetAsync(model.Email);
-            //        return Ok("קוד איפוס נשלח למייל שלך.");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        return BadRequest($"אירעה שגיאה: {ex.Message}");
-            //    }
-            //}
-
-            // שלב 2 - אישור קוד איפוס סיסמה ועדכון הסיסמה
-            //[HttpPost("confirm")]
-            //public async Task<IActionResult> ConfirmPasswordReset([FromBody] PasswordResetRequest model)
-            //{
-            //    if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.VerificationCode) || string.IsNullOrEmpty(model.NewPassword))
-            //    {
-            //        return BadRequest("All fields are required.");
-            //    }
-
-            //    try
-            //    {
-                    // קריאה לאישור איפוס הסיסמה
-            //        await _Student_Manager_BL.ConfirmPasswordResetAsync(model.Email, model.VerificationCode, model.NewPassword);
-            //        return Ok("הסיסמה עודכנה בהצלחה.");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        return BadRequest($"אירעה שגיאה: {ex.Message}");
-            //    }
-            //}
+        public PasswordResetController(PasswordResetService passwordResetService)
+        {
+            _passwordResetService = passwordResetService;
         }
+
+        // בקשת שליחת קוד אימות למייל
+        [HttpPost("send-code")]
+        public async Task<IActionResult> SendCode([FromBody] EmailRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email))
+                return BadRequest("Email is required.");
+
+            var result = await _passwordResetService.SendVerificationCodeAsync(request.Email);
+            if (!result)
+                return NotFound("Email not found.");
+
+            return Ok("Verification code sent.");
+        }
+
+        // אימות קוד שהמשתמש הזין
+        //[HttpPost("verify-code")]
+        //public IActionResult VerifyCode([FromBody] VerifyCodeRequest request)
+        //{
+        //    if (_passwordResetService.VerifyCode(request.Email, request.Code))
+        //        return Ok("Code is valid.");
+        //    else
+        //        return BadRequest("Invalid or expired code.");
+        //}
+
+        // איפוס סיסמה עם קוד האימות
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            // קודם כל לוודא שהקוד נכון
+            if (!_passwordResetService.VerifyCode(request.Email, request.Code))
+                return BadRequest("Invalid or expired code.");
+
+            // ואז לאפס סיסמה
+            var success = await _passwordResetService.ResetPasswordAsync(request.Email, request.Code, request.NewPassword);
+            if (!success)
+                return BadRequest("Password reset failed.");
+
+            return Ok("Password has been reset.");
+        }
+
     }
+
+    public class EmailRequest
+    {
+        public string Email { get; set; }
+    }
+
+    //public class VerifyCodeRequest
+    //{
+    //    public string Email { get; set; }
+    //    public string Code { get; set; }
+    //}
+
+    public class ResetPasswordRequest
+    {
+        public string Email { get; set; }
+        public string Code { get; set; }
+        public string NewPassword { get; set; }
+    }
+
+}
 

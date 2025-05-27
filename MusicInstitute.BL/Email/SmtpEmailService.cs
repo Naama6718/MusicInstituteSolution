@@ -1,32 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Net;
 using System.Net.Mail;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace MusicInstitute.BL.Email
 {
     public class SmtpEmailService : IEmailService
     {
-        private readonly string _smtpHost = "smtp.yourprovider.com";
-        private readonly int _smtpPort = 587;
-        private readonly string _smtpUser = "naama6718@gmail.com";
-        private readonly string _smtpPass = "lerploujqwgnctql";
+        private readonly SmtpSettings _settings;
+
+        public SmtpEmailService(IOptions<SmtpSettings> options)
+        {
+            _settings = options.Value;
+        }
 
         public async Task SendEmailAsync(string to, string subject, string body)
         {
-            var mail = new MailMessage();
-            mail.From = new MailAddress(_smtpUser);
-            mail.To.Add(to);
-            mail.Subject = subject;
-            mail.Body = body;
-
-            using (var smtp = new SmtpClient(_smtpHost, _smtpPort))
+            var mail = new MailMessage
             {
-                smtp.Credentials = new NetworkCredential(_smtpUser, _smtpPass);
-                smtp.EnableSsl = true;
+                From = new MailAddress(_settings.UserName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
+
+            mail.To.Add(to);
+
+            using (var smtp = new SmtpClient(_settings.Host, _settings.Port))
+            {
+                smtp.Credentials = new NetworkCredential(_settings.UserName, _settings.Password);
+                smtp.EnableSsl = _settings.EnableSsl;
 
                 await smtp.SendMailAsync(mail);
             }

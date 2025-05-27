@@ -9,5 +9,6 @@ namespace MusicInstitute.DAL.Api
         Task<List<Student>> GetAllStudent();
         Task<Student> GetStudentById(int studentId);
         Task UpdateStudent(int studentId, string currentPassword, string firstName = null, string lastName = null, string phone = null, string email = null, string instrument = null, int level = 0, string studentPassword = null);
+        Task<bool> UpdateStudentPassword(int studentId, string newPassword);
     }
 }

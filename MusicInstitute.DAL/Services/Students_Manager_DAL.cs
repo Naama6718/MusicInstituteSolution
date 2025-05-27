@@ -36,7 +36,7 @@ namespace MusicInstitute.DAL.Services
         public async Task UpdateStudent(int studentId, string currentPassword, string firstName = null, string lastName = null, string phone = null, string email = null, string instrument = null, int level = 0, string studentPassword = null)
         {
             var existingStudent = await _dbManager.Students.FirstOrDefaultAsync(s => s.StudentId == studentId);
-           
+
             if (existingStudent == null)
                 throw new Exception("Student not found");
 
@@ -45,7 +45,7 @@ namespace MusicInstitute.DAL.Services
             {
                 throw new UnauthorizedAccessException("Invalid password.");
             }
-           
+
             existingStudent.FirstName = firstName ?? existingStudent.FirstName;
             existingStudent.LastName = lastName ?? existingStudent.LastName;
             existingStudent.Phone = phone ?? existingStudent.Phone;
@@ -74,6 +74,16 @@ namespace MusicInstitute.DAL.Services
                 throw new Exception("Student not found");
 
             return existingStudent;
+        }
+        public async Task<bool> UpdateStudentPassword(int studentId, string newPassword)
+        {
+            var existingStudent = await _dbManager.Students.FirstOrDefaultAsync(s => s.StudentId == studentId);
+            if (existingStudent == null)
+                return false;
+
+            existingStudent.StudentPassword = newPassword;
+            await _dbManager.SaveChangesAsync();
+            return true;
         }
     }
 }

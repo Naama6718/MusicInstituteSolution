@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MusicInstitute.BL.Models
 {
-   public class PasswordResetRequest
+    public class PasswordResetRequest
     {
         public string Email { get; set; }
         public string VerificationCode { get; set; }
