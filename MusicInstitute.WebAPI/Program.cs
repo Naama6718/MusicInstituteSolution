@@ -1,4 +1,4 @@
-using MusicInstitute.BL.Mapping;//tamar
+using MusicInstitute.BL.Mapping;
 using MusicInstitute.BL.Services;
 using MusicInstitute.DAL.Models;
 using MusicInstitute.DAL.Services;
@@ -16,11 +16,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // ? 2. שימוש בשכבות:
-// הוספת AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddHostedService<MonthlyLessonMoverService>();
 
-// הוספת שכבת BL ו-DAL
 builder.Services.AddScoped<Instrument_Manager_BL>();
 builder.Services.AddScoped<Instrument_Manager_DAL>();
 builder.Services.AddScoped<Student_Manager_BL>();
@@ -33,8 +31,8 @@ builder.Services.AddScoped<IInstrument_Manager_DAL, Instrument_Manager_DAL>();
 builder.Services.AddScoped<IInstrument_Manager_BL, Instrument_Manager_BL>();
 builder.Services.AddScoped<IStudents_Manager_DAL, Students_Manager_DAL>();
 builder.Services.AddScoped<IStudent_Manager_BL, Student_Manager_BL>();
-builder.Services.AddScoped<ITeacher_Manager_BL,Teacher_Manager_BL>();
-builder.Services.AddScoped < ITeacher_Manager_DAL, Teacher_Manager_DAL>();
+builder.Services.AddScoped<ITeacher_Manager_BL, Teacher_Manager_BL>();
+builder.Services.AddScoped<ITeacher_Manager_DAL, Teacher_Manager_DAL>();
 builder.Services.AddScoped<IAvailableLessons_Manager_BL, AvailableLessons_Manager_BL>();
 builder.Services.AddScoped<IAvailableLessons_Manager_DAL, AvailableLessons_Manager_DAL>();
 builder.Services.AddScoped<IBookedLessons_Manager_BL, BookedLessons_Manager_BL>();
@@ -44,12 +42,19 @@ builder.Services.AddScoped<IPassedLessons_Manager_DAL, PassedLessons_Manager_DAL
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
-
 // ? 3. הגדרת קישור למסד נתונים
 builder.Services.AddDbContext<DB_Manager>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
+
+// ? 3.5 – קריאה ל-Seed
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<DB_Manager>();
+    DataSeeder.SeedAvailableLessons(context); // <<< הקריאה כאן
+}
 
 // ? 4. הגדרת צינור הבקשות (Pipeline)
 if (app.Environment.IsDevelopment())
