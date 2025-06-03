@@ -48,13 +48,7 @@ builder.Services.AddDbContext<DB_Manager>(options =>
 
 var app = builder.Build();
 
-// ? 3.5 – קריאה ל-Seed
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<DB_Manager>();
-    DataSeeder.SeedAvailableLessons(context); // <<< הקריאה כאן
-}
+
 
 // ? 4. הגדרת צינור הבקשות (Pipeline)
 if (app.Environment.IsDevelopment())
