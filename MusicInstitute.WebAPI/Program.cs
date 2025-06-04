@@ -45,9 +45,19 @@ builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 // ? 3. הגדרת קישור למסד נתונים
 builder.Services.AddScoped<DB_Manager>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3000") // הכתובת של ה-React שלך
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 var app = builder.Build();
 
-
+app.UseCors("AllowReactApp");
 
 // ? 4. הגדרת צינור הבקשות (Pipeline)
 if (app.Environment.IsDevelopment())
