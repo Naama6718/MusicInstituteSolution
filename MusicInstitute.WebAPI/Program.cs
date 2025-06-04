@@ -43,8 +43,7 @@ builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpS
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
 // ? 3. הגדרת קישור למסד נתונים
-builder.Services.AddDbContext<DB_Manager>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<DB_Manager>();
 
 var app = builder.Build();
 
