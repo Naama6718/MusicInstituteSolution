@@ -85,5 +85,28 @@ namespace MusicInstitute.DAL.Services
             await _dbManager.SaveChangesAsync();
             return true;
         }
+        public async Task<Student> GetStudentByUsernameAndPassword(string username, string password)
+        {
+            try
+            {
+                return await _dbManager.Students
+                    .FirstOrDefaultAsync(s => s.FirstName + " " + s.LastName == username && s.StudentPassword == password);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"DAL Error: {ex.Message}");
+                throw;
+            }
+        }
+        public async Task<List<PassedLesson>> GetPassedLessonsByStudentIdAsync(int studentId)
+        {
+            return await _dbManager.PassedLessons
+                .Where(p => p.StudentIdLessons == studentId)
+                .Include(p => p.TeacherIdLessonsNavigation)
+                .OrderBy(p => p.LessonDate)
+                .ThenBy(p => p.LessonTime)
+                .ToListAsync();
+        }
+
     }
 }

@@ -4,6 +4,8 @@ namespace MusicInstitute.DAL.Api
 {
     public interface IBookedLessons_Manager_DAL
     {
+        Task<bool> BookSelectedLessonAsync(int lessonId, int studentId);
+        Task<List<BookedLesson>> GetLessonsByStudentIdAsync(int studentId);
         Task AddLesson(BookedLesson lesson);
         Task<List<BookedLesson>> GetAllBookedLesson();
         Task<List<BookedLesson>> GetLessonsByInstrument(string instrumentName);

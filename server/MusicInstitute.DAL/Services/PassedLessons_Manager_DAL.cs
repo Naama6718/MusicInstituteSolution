@@ -21,6 +21,8 @@ namespace MusicInstitute.DAL.Services
         // הוספת שיעור חדש
         public async Task AddLesson(PassedLesson lesson)
         {
+            lesson.LessonId= 0;  // או לשם השדה המתאים לך
+
             await _dbManager.PassedLessons.AddAsync(lesson);
             await _dbManager.SaveChangesAsync();
         }

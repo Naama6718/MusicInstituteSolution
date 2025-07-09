@@ -4,8 +4,9 @@ namespace MusicInstitute.BL.Api
 {
     public interface IBookedLessons_Manager_BL
     {
+        Task<List<BookedLessonDTO>> GetBookedLessonsAsync(int studentId);
         Task MovePastLessonsToPassedAsync();
-
+        Task<bool> BookSelectedLessonAsync(int lessonId, int studentId);
         Task AddLesson(BookedLessonDTO lessonDto);
         Task<List<BookedLessonDTO>> GetAllBookedLessons();
         Task<BookedLessonDTO> GetLessonById(int lessonId);
