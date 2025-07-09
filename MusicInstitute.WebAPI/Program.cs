@@ -50,7 +50,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp",
         builder =>
         {
-            builder.WithOrigins("http://localhost:3000") // הכתובת של ה-React שלך
+            builder.WithOrigins("http://localhost:5173") // הכתובת של ה-React שלך
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         });

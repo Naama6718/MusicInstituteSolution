@@ -1,4 +1,6 @@
-﻿namespace MusicInstitute.BL.Models
+﻿using System.Collections.Generic; // ודאי שהשורה הזו קיימת
+
+namespace MusicInstitute.BL.Models
 {
     public class TeacherDTO
     {
@@ -10,12 +12,10 @@
         public string Email { get; set; } = null!;
         public string TeacherPassword { get; set; } = null!;
 
-        // אם תרצה לכלול את השיעורים הזמינים והנגינה (Instruments) 
-        // public List<string> AvailableLessons { get; set; } = new List<string>();
-        // public List<string> Instruments { get; set; } = new List<string>();
-
-        // אם לא צריך לשמור את הקולקציות של שיעורים (BookedLessons, PassedLessons), אפשר להשמיט
-        // public List<BookedLessonDTO> BookedLessons { get; set; } = new List<BookedLessonDTO>();
-        // public List<PassedLessonDTO> PassedLessons { get; set; } = new List<PassedLessonDTO>();
+        // === החלק שאת מוסיפה ===
+        public List<InstrumentDTO> Instruments { get; set; } = new List<InstrumentDTO>();
+        public List<AvailableLessonDTO> AvailableLessons { get; set; } = new List<AvailableLessonDTO>();
+        public List<BookedLessonDTO> BookedLessons { get; set; } = new List<BookedLessonDTO>();
+        public List<PassedLessonDTO> PassedLessons { get; set; } = new List<PassedLessonDTO>();
     }
 }

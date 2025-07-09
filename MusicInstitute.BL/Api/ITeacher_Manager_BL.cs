@@ -11,7 +11,10 @@ namespace MusicInstitute.BL.Api
         Task<TeacherDTO> GetTeacherByEmailAsync(string email);
         Task<TeacherDTO> GetTeacherByIdAsync(int teacherId);
         Task<TeacherDTO> GetTeacherByNameAndPasswordAsync(string firstName, string lastName, string password);
+        Task<TeacherDTO> GetTeacherByEmailAndPasswordAsync(string email, string password);
+
         Task RequestPasswordResetAsync(string email);
-        Task UpdateTeacherById(int teacherId, string currentPassword, TeacherDTO teacherDTO);
+        // ITeacher_Manager_BL.cs
+        Task UpdateTeacherById(int teacherId, string currentPassword, TeacherUpdateDTO teacherUpdateDTO);
     }
 }
