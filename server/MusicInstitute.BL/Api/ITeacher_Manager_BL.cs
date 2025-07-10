@@ -4,6 +4,8 @@ namespace MusicInstitute.BL.Api
 {
     public interface ITeacher_Manager_BL
     {
+        Task<TeacherDTO> GetTeacherByEmailAndPasswordAsync(string email, string password);
+
         Task AddTeacher(TeacherDTO teacherDTO);
         Task ConfirmPasswordResetAsync(string email, string verificationCode, string newPassword);
         Task DeleteTeacherAsync(int teacherId);
@@ -12,6 +14,6 @@ namespace MusicInstitute.BL.Api
         Task<TeacherDTO> GetTeacherByIdAsync(int teacherId);
         Task<TeacherDTO> GetTeacherByNameAndPasswordAsync(string firstName, string lastName, string password);
         Task RequestPasswordResetAsync(string email);
-        Task UpdateTeacherById(int teacherId, string currentPassword, TeacherDTO teacherDTO);
+        Task UpdateTeacherById(int teacherId, string currentPassword, TeacherUpdateDTO teacherUpdateDTO);
     }
 }

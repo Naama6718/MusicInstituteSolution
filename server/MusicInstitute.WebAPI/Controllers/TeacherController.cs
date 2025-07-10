@@ -38,11 +38,25 @@ namespace MusicInstitute.API.Controllers
             return Ok(teacher);
         }
 
+        // בתוך TeachersController.cs
+
         [HttpGet("by-login")]
-        public async Task<IActionResult> GetByLogin([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] string password)
+        public async Task<IActionResult> GetByLogin([FromQuery] string email, [FromQuery] string password)
         {
-            var teacher = await _teacherManagerBL.GetTeacherByNameAndPasswordAsync(firstName, lastName, password);
-            return Ok(teacher);
+            try
+            {
+                var teacher = await _teacherManagerBL.GetTeacherByEmailAndPasswordAsync(email, password);
+                return Ok(teacher);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // מחזיר 404 אם המורה לא נמצא, שזה יותר סמנטי מ-400
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An internal server error occurred.");
+            }
         }
 
         [HttpPost]
@@ -53,12 +67,27 @@ namespace MusicInstitute.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromQuery] string currentPassword, [FromBody] TeacherDTO teacherDTO)
+        public async Task<IActionResult> Update(int id, [FromQuery] string currentPassword, [FromBody] TeacherUpdateDTO teacherUpdateDTO)
         {
-            await _teacherManagerBL.UpdateTeacherById(id, currentPassword, teacherDTO);
-            return Ok("Teacher updated successfully.");
+            try
+            {
+                await _teacherManagerBL.UpdateTeacherById(id, currentPassword, teacherUpdateDTO);
+                return NoContent(); // קוד 204 הוא תשובה טובה יותר לעדכון מוצלח
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message); // מחזיר 401 אם הסיסמה שגויה
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message); // מחזיר 404 אם המורה לא נמצא
+            }
+            catch (Exception ex)
+            {
+                // לוכד שגיאות אחרות ומחזיר 500
+                return StatusCode(500, "An internal server error occurred.");
+            }
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

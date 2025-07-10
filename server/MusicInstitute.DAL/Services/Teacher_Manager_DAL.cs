@@ -40,9 +40,20 @@ namespace MusicInstitute.DAL.Services
 
         public async Task<Teacher> GetTeacherById(int teacherId)
         {
-            var existingTeacher = await _dbManager.Teachers.FirstOrDefaultAsync(t => t.TeacherId == teacherId);
+            // ודאי שיש לך using Microsoft.EntityFrameworkCore; בראש הקובץ
+
+            var existingTeacher = await _dbManager.Teachers
+                .Include(t => t.Instruments)
+                .Include(t => t.AvailableLessons)
+                // === כאן התיקון ===
+                .Include(t => t.BookedLessons)
+                    .ThenInclude(bl => bl.StudentIdLessonsNavigation) // השתמשי בשם הנכון
+                .Include(t => t.PassedLessons)
+                    .ThenInclude(pl => pl.StudentIdLessonsNavigation)  // השתמשי בשם הנכון
+                .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
+
             if (existingTeacher == null)
-                throw new Exception("Teacher not found");
+                throw new System.Exception("Teacher not found");
 
             return existingTeacher;
         }
@@ -93,37 +104,30 @@ namespace MusicInstitute.DAL.Services
             await _dbManager.SaveChangesAsync();
         }
 
-        public async Task UpdateTeacherAsync(
-            int teacherId,
-            string currentPassword,
-            string firstName = null,
-            string lastName = null,
-            string phone = null,
-            string email = null,
-            int? experienceYears = null)
+        public async Task UpdateTeacherAsync(int teacherId, string currentPassword, Teacher updatedTeacherData)
         {
             var existingTeacher = await _dbManager.Teachers
-                .Include(t => t.Instruments)
-                .Include(t => t.AvailableLessons)
-                .Include(t => t.BookedLessons)
-                .Include(t => t.PassedLessons)
                 .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
 
             if (existingTeacher == null)
                 throw new KeyNotFoundException($"Teacher with ID {teacherId} not found.");
 
+            // ודא שהסיסמה הנוכחית שהגיעה מהמשתמש נכונה
             if (existingTeacher.TeacherPassword != currentPassword)
                 throw new UnauthorizedAccessException("Incorrect current password.");
 
-            existingTeacher.FirstName = firstName ?? existingTeacher.FirstName;
-            existingTeacher.LastName = lastName ?? existingTeacher.LastName;
-            existingTeacher.Phone = phone ?? existingTeacher.Phone;
-            existingTeacher.Email = email ?? existingTeacher.Email;
-
-            if (experienceYears.HasValue)
-                existingTeacher.ExperienceYears = experienceYears.Value;
+            // עדכון השדות של המורה הקיים עם הנתונים החדשים
+            // אנחנו לא מעדכנים את הסיסמה כאן. זה נעשה בפונקציה נפרדת.
+            existingTeacher.FirstName = updatedTeacherData.FirstName;
+            existingTeacher.LastName = updatedTeacherData.LastName;
+            existingTeacher.Phone = updatedTeacherData.Phone;
+            existingTeacher.Email = updatedTeacherData.Email;
+            existingTeacher.ExperienceYears = updatedTeacherData.ExperienceYears;
 
             await _dbManager.SaveChangesAsync();
         }
-    }
+
+    
+    
+}
 }

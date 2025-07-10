@@ -46,12 +46,11 @@ namespace MusicInstitute.BL.Services
             return _mapper.Map<List<TeacherDTO>>(teachers);
         }
 
-        public async Task UpdateTeacherById(int teacherId, string currentPassword, TeacherDTO teacherDTO)
+        public async Task UpdateTeacherById(int teacherId, string currentPassword, TeacherUpdateDTO teacherUpdateDTO)
         {
-            var teacher = _mapper.Map<Teacher>(teacherDTO);
-            await _teacherManagerDAL.UpdateTeacherAsync(teacherId, currentPassword, teacher.FirstName, teacher.LastName, teacher.Phone, teacher.Email);
+            var teacherDataForUpdate = _mapper.Map<Teacher>(teacherUpdateDTO);
+            await _teacherManagerDAL.UpdateTeacherAsync(teacherId, currentPassword, teacherDataForUpdate);
         }
-
         public async Task DeleteTeacherAsync(int teacherId)
         {
             await _teacherManagerDAL.DeleteTeacher(teacherId);
@@ -130,9 +129,28 @@ namespace MusicInstitute.BL.Services
             if (teacher == null)
                 throw new InvalidOperationException("Teacher not found.");
 
-            await _teacherManagerDAL.UpdateTeacherAsync(teacher.TeacherId, newPassword);
+            await _teacherManagerDAL.ResetPassword(teacher.TeacherId, newPassword);
 
             _resetRequests.Remove(email);
+        }
+
+        public async Task<TeacherDTO> GetTeacherByEmailAndPasswordAsync(string email, string password)
+        {
+            var teachers = await _teacherManagerDAL.GetAllTeachers();
+            var teacher = teachers.FirstOrDefault(t => t.Email.Equals(email, StringComparison.OrdinalIgnoreCase) && t.TeacherPassword == password);
+
+            if (teacher == null)
+            {
+                throw new InvalidOperationException("Teacher not found or password incorrect.");
+            }
+
+            // === זה החלק הקריטי שמונע את השגיאה בריאקט ===
+            // אחרי שמצאנו את המורה, אנחנו צריכים לקרוא לפונקציה
+            // שיודעת להביא את כל הנתונים המקושרים אליו (כולל שיעורים וכלים).
+
+            // קוראים ל-GetTeacherByIdAsync מה-BL עצמו, כדי שיטפל במיפוי.
+            // הפונקציה GetTeacherByIdAsync קוראת ל-GetTeacherById ב-DAL, שכבר שדרגנו.
+            return await GetTeacherByIdAsync(teacher.TeacherId);
         }
     }
 }

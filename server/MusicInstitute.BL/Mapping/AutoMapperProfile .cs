@@ -17,15 +17,23 @@ namespace MusicInstitute.BL.Mapping
             CreateMap<DAL.Models.Student, StudentDTO>().ReverseMap();
             CreateMap<DAL.Models.Teacher, TeacherDTO>().ReverseMap();
             CreateMap<DAL.Models.AvailableLesson, AvailableLessonDTO>().ReverseMap();
-            CreateMap<BookedLesson, BookedLessonDTO>()
-       .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.StudentIdLessonsNavigation.FirstName))
-       .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.StudentIdLessonsNavigation.LastName))
-       .ForMember(dest => dest.TeacherFirstName, opt => opt.MapFrom(src => src.TeacherIdLessonsNavigation.FirstName))
-       .ForMember(dest => dest.TeacherLastName, opt => opt.MapFrom(src => src.TeacherIdLessonsNavigation.LastName))
-       .ForMember(dest => dest.LessonDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.LessonDate.ToDateTime(TimeOnly.MinValue))))
-       .ForMember(dest => dest.LessonTime, opt => opt.MapFrom(src => TimeOnly.FromTimeSpan(src.LessonTime.ToTimeSpan())))
-       .ReverseMap();
-            CreateMap<DAL.Models.PassedLesson, PassedLessonDTO>().ReverseMap();
+            // מיפוי מפורט עבור BookedLesson
+            CreateMap<DAL.Models.BookedLesson, BookedLessonDTO>()
+                .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.StudentIdLessonsNavigation.FirstName))
+                .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.StudentIdLessonsNavigation.LastName))
+                .ForMember(dest => dest.TeacherFirstName, opt => opt.MapFrom(src => src.TeacherIdLessonsNavigation.FirstName))
+                .ForMember(dest => dest.TeacherLastName, opt => opt.MapFrom(src => src.TeacherIdLessonsNavigation.LastName));
+
+            // מיפוי מפורט עבור PassedLesson
+            CreateMap<DAL.Models.PassedLesson, PassedLessonDTO>()
+                .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.StudentIdLessonsNavigation.FirstName))
+                .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.StudentIdLessonsNavigation.LastName))
+                .ForMember(dest => dest.TeacherFirstName, opt => opt.MapFrom(src => src.TeacherIdLessonsNavigation.FirstName))
+                .ForMember(dest => dest.TeacherLastName, opt => opt.MapFrom(src => src.TeacherIdLessonsNavigation.LastName));
+
+            // אם אתם צריכים גם את המיפוי ההפוך (מ-DTO ל-DAL), תשאירו אותו
+            CreateMap<BookedLessonDTO, DAL.Models.BookedLesson>();
+            CreateMap<PassedLessonDTO, DAL.Models.PassedLesson>();
         }
     }
 }
