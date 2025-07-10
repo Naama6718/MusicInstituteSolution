@@ -1,6 +1,7 @@
-﻿using AutoMapper;
+﻿// קובץ: MusicInstitute.BL/Mapping/AutoMapperProfile.cs
+
+using AutoMapper;
 using MusicInstitute.BL.Models;
-using MusicInstitute.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,14 @@ namespace MusicInstitute.BL.Mapping
     {
         public AutoMapperProfile()
         {
+            // מיפויים שלא משתנים
             CreateMap<DAL.Models.Instrument, InstrumentDTO>().ReverseMap();
             CreateMap<DAL.Models.Student, StudentDTO>().ReverseMap();
             CreateMap<DAL.Models.Teacher, TeacherDTO>().ReverseMap();
             CreateMap<DAL.Models.AvailableLesson, AvailableLessonDTO>().ReverseMap();
+            CreateMap<TeacherUpdateDTO, DAL.Models.Teacher>();
+
+            // === כאן התיקון ===
             // מיפוי מפורט עבור BookedLesson
             CreateMap<DAL.Models.BookedLesson, BookedLessonDTO>()
                 .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.StudentIdLessonsNavigation.FirstName))
