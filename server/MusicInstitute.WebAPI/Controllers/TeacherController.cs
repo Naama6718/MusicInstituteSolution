@@ -92,7 +92,6 @@ namespace MusicInstitute.API.Controllers
                 return StatusCode(500, "An internal server error occurred.");
             }
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

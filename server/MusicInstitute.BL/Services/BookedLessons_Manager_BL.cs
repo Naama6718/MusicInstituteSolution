@@ -96,6 +96,16 @@ namespace MusicInstitute.BL.Services
                 await _passedLessonsDal.AddLesson(passed);
                 await _bookedLessonsDal.RemoveLesson(booked.LessonId);
             }
+
         }
+        public Task<bool> BookSelectedLessonAsync(int lessonId, int studentId)
+          => _bookedLessonsDal.BookSelectedLessonAsync(lessonId, studentId);
+
+        public async Task<List<BookedLessonDTO>> GetBookedLessonsAsync(int studentId)
+        {
+            var lessons = await _bookedLessonsDal.GetLessonsByStudentIdAsync(studentId);
+            return _mapper.Map<List<BookedLessonDTO>>(lessons);
+        }
+
     }
 }

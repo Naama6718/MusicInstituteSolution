@@ -1,9 +1,13 @@
 ﻿using MusicInstitute.BL.Models;
+using MusicInstitute.DAL.Models;
 
 namespace MusicInstitute.BL.Api
 {
     public interface IStudent_Manager_BL
     {
+        Task<List<BookedLessonDTO>> GetBookedLessonsAsync(int studentId);
+        Task<List<PassedLessonDTO>> GetPassedLessonsAsync(int studentId);
+        Task<StudentDTO> Login(string username,string password);
         Task AddStudent(StudentDTO studentDTO);
         Task<bool> ChangePasswordByEmail(string email, string newPassword);
         Task DeleteStudent(int studentId);

@@ -7,7 +7,7 @@
         public TimeOnly LessonTime { get; set; }
         public string Kind { get; set; } = null!;
         public int StudentIdLessons { get; set; }
-        public int TeacherIdLessons { get; set; }
+        public int? TeacherIdLessons { get; set; }
         public int DurationMinutes { get; set; }
 
         // פרטי תלמיד (אם רוצים למפות את המידע של התלמיד)

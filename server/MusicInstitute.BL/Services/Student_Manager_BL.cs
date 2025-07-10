@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
+using MusicInstitute.BL.Api;
+using MusicInstitute.BL.Email;
+using MusicInstitute.BL.Models;
 using MusicInstitute.DAL.Api;
+using MusicInstitute.DAL.Models;
+using MusicInstitute.DAL.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MusicInstitute.BL.Models;
-using MusicInstitute.DAL.Models;
-using MusicInstitute.BL.Email;
-using MusicInstitute.BL.Api;
 
 namespace MusicInstitute.BL.Services
 {
@@ -17,14 +18,15 @@ namespace MusicInstitute.BL.Services
 
         private readonly IMapper _mapper;
         private readonly IStudents_Manager_DAL _studentManagerDAL;
+        private readonly IBookedLessons_Manager_DAL _bookedLessonDal;
         private readonly IEmailService _emailService;
         private readonly Dictionary<string, PasswordResetRequest> _resetRequests = new();
-        public Student_Manager_BL(IMapper mapper, IStudents_Manager_DAL studentManagerDAL, IEmailService emailService)
+        public Student_Manager_BL(IMapper mapper, IStudents_Manager_DAL studentManagerDAL, IEmailService emailService, IBookedLessons_Manager_DAL bookedLessonDal)
         {
             _mapper = mapper;
             _studentManagerDAL = studentManagerDAL;
             _emailService = emailService;
-
+            _bookedLessonDal = bookedLessonDal;
         }
         public async Task AddStudent(StudentDTO studentDTO)
         {
@@ -396,6 +398,35 @@ namespace MusicInstitute.BL.Services
             return await _studentManagerDAL.UpdateStudentPassword(student.StudentId, newPassword);
         }
 
+        public async Task<StudentDTO> Login(string username,string password)
+        {
+            try
+            {
+                var studentEntity = await _studentManagerDAL.GetStudentByUsernameAndPassword(username, password);
+                if (studentEntity == null)
+                {
+                    return null; // לא נמצא תלמיד תואם
+                }
+                return _mapper.Map<StudentDTO>(studentEntity);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"BL Error: {ex.Message}");
+                throw;
+            }
+        }
+public async Task<List<BookedLessonDTO>> GetBookedLessonsAsync(int studentId)
+{
+    var lessons = await _bookedLessonDal.GetLessonsByStudentIdAsync(studentId);
+    // גם אם אין שיעורים – החזר רשימה ריקה
+    return _mapper.Map<List<BookedLessonDTO>>(lessons);
+}
+
+        public async Task<List<PassedLessonDTO>> GetPassedLessonsAsync(int studentId)
+        {
+            var lessons = await _studentManagerDAL.GetPassedLessonsByStudentIdAsync(studentId);
+            return _mapper.Map<List<PassedLessonDTO>>(lessons);
+        }
 
     }
 }

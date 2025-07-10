@@ -4,10 +4,12 @@ namespace MusicInstitute.DAL.Api
 {
     public interface IStudents_Manager_DAL
     {
+        Task<List<PassedLesson>> GetPassedLessonsByStudentIdAsync(int studentId);
         Task AddStudent(Student student);
         Task DeleteStudent(int studentId);
         Task<List<Student>> GetAllStudent();
         Task<Student> GetStudentById(int studentId);
+        Task<Student> GetStudentByUsernameAndPassword(string username ,string password);
         Task UpdateStudent(int studentId, string currentPassword, string firstName = null, string lastName = null, string phone = null, string email = null, string instrument = null, int level = 0, string studentPassword = null);
         Task<bool> UpdateStudentPassword(int studentId, string newPassword);
     }

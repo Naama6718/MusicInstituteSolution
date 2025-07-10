@@ -45,16 +45,29 @@ builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 // ? 3. הגדרת קישור למסד נתונים
 builder.Services.AddScoped<DB_Manager>();
 
+// CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        builder =>
-        {
-            builder.WithOrigins("http://localhost:5173") // הכתובת של ה-React שלך
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        });
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
 });
+
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // נשמר את השמות בדיוק כמו שהם כשאנחנו שולחים החוצה
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+        // ???הפוך קריאה נכנסת לבלתי?רגישה לאותיות
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });
+
+
+
 var app = builder.Build();
 
 app.UseCors("AllowReactApp");

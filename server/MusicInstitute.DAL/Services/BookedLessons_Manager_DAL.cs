@@ -17,12 +17,15 @@ namespace MusicInstitute.DAL.Services
             _dbManager = dbManager;
         }
 
-        //הוספת שיעור חדש
         public async Task AddLesson(BookedLesson lesson)
         {
+            // ודא שה-Id הוא אפס (ברירת מחדל)
+            lesson.LessonId = 0; // או את השם המדויק של שדה המזהה שלך
+
             await _dbManager.BookedLessons.AddAsync(lesson);
             await _dbManager.SaveChangesAsync();
         }
+
 
         // מחיקת שיעור לפי ID
         public async Task<bool> RemoveLesson(int lessonId)
@@ -74,6 +77,52 @@ namespace MusicInstitute.DAL.Services
                 .Where(l => l.StudentIdLessonsNavigation.FirstName + " " + l.StudentIdLessonsNavigation.LastName == studentName)
                 .ToListAsync();
         }
+
+        public async Task<List<BookedLesson>> GetLessonsByStudentIdAsync(int studentId)
+        {
+            return await _dbManager.BookedLessons
+                .AsNoTracking()
+                .Where(b => b.StudentIdLessons == studentId)
+                .Include(b => b.TeacherIdLessonsNavigation)   // לטעינת שם מורה
+                .OrderBy(b => b.LessonDate)
+                .ThenBy(b => b.LessonTime)
+                .ToListAsync();
+        }
+
+
+        // BookedLessonsDal.cs  (שכבת DAL)
+        public async Task<bool> BookSelectedLessonAsync(int lessonId, int studentId)
+        {
+            var selected = await _dbManager.AvailableLessons
+                                    .AsTracking()
+                                    .FirstOrDefaultAsync(l => l.LessonId == lessonId);
+
+            if (selected == null || selected.TeacherIdLessons == null)
+                return false;
+
+            if (!await _dbManager.Students.AnyAsync(s => s.StudentId == studentId))
+                return false;
+
+            var booked = new BookedLesson
+            {
+                // אל תגדיר LessonId אם זו עמודת Identity בטבלת Booked_Lessons
+                LessonDate = selected.LessonDate,
+                LessonTime = selected.LessonTime,
+                DurationMinutes = selected.DurationMinutes,
+                TeacherIdLessons = selected.TeacherIdLessons,
+                StudentIdLessons = studentId,
+                Kind = selected.Kind
+            };
+
+            _dbManager.BookedLessons.Add(booked);
+            _dbManager.AvailableLessons.Remove(selected);
+
+            var rows = await _dbManager.SaveChangesAsync();   // rows > 0 → הצלחה
+            Console.WriteLine($"📌 SaveChanges rows = {rows}");
+            return rows > 0;
+        }
+
+
 
 
 
