@@ -12,7 +12,7 @@ namespace MusicInstitute.BL.Api
         Task<TeacherDTO> GetTeacherByIdAsync(int teacherId);
         Task<TeacherDTO> GetTeacherByNameAndPasswordAsync(string firstName, string lastName, string password);
         Task<TeacherDTO> GetTeacherByEmailAndPasswordAsync(string email, string password);
-
+        Task AdminUpdateTeacherById(int teacherId, TeacherUpdateDTO teacherUpdateDTO);
         Task RequestPasswordResetAsync(string email);
         Task UpdateTeacherById(int teacherId, string currentPassword, TeacherUpdateDTO teacherUpdateDTO);
     }

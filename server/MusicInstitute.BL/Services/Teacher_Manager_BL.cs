@@ -51,6 +51,14 @@ namespace MusicInstitute.BL.Services
             var teacherDataForUpdate = _mapper.Map<Teacher>(teacherUpdateDTO);
             await _teacherManagerDAL.UpdateTeacherAsync(teacherId, currentPassword, teacherDataForUpdate);
         }
+
+        public async Task AdminUpdateTeacherById(int teacherId, TeacherUpdateDTO teacherUpdateDTO)
+        {
+            var teacherDataForUpdate = _mapper.Map<Teacher>(teacherUpdateDTO);
+
+            // קוראים לפונקציית ה-DAL אבל שולחים null במקום סיסמה
+            await _teacherManagerDAL.UpdateTeacherAsync(teacherId, null, teacherDataForUpdate);
+        }
         public async Task DeleteTeacherAsync(int teacherId)
         {
             await _teacherManagerDAL.DeleteTeacher(teacherId);

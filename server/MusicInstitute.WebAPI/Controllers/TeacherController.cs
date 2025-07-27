@@ -71,24 +71,48 @@ namespace MusicInstitute.API.Controllers
         // TeachersController.cs
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromQuery] string currentPassword, [FromBody] TeacherUpdateDTO teacherUpdateDTO)
+        public async Task<IActionResult> Update(int id, [FromQuery] string? currentPassword, [FromBody] TeacherUpdateDTO teacherUpdateDTO)
         {
             try
             {
+                // אם לא סופקה סיסמה, נזרוק שגיאה (כי זה ה-Endpoint למשתמש רגיל)
+                if (string.IsNullOrEmpty(currentPassword))
+                {
+                    return BadRequest("Current password is required for this action.");
+                }
+
                 await _teacherManagerBL.UpdateTeacherById(id, currentPassword, teacherUpdateDTO);
-                return NoContent(); // קוד 204 הוא תשובה טובה יותר לעדכון מוצלח
+                return NoContent();
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex.Message); // מחזיר 401 אם הסיסמה שגויה
+                return Unauthorized(ex.Message);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message); // מחזיר 404 אם המורה לא נמצא
+                return NotFound(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // לוכד שגיאות אחרות ומחזיר 500
+                return StatusCode(500, "An internal server error occurred.");
+            }
+        }
+
+        // === הוסף את ה-Endpoint החדש עבור האדמין ===
+        [HttpPut("admin-update/{id}")]
+        public async Task<IActionResult> AdminUpdate(int id, [FromBody] TeacherUpdateDTO teacherUpdateDTO)
+        {
+            try
+            {
+                await _teacherManagerBL.AdminUpdateTeacherById(id, teacherUpdateDTO);
+                return Ok("Teacher updated successfully by admin.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
                 return StatusCode(500, "An internal server error occurred.");
             }
         }

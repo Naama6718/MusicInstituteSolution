@@ -15,8 +15,14 @@ namespace MusicInstitute.BL.Mapping
         public AutoMapperProfile()
         {
             // מיפויים שלא משתנים
-            CreateMap<DAL.Models.Instrument, InstrumentDTO>().ReverseMap();
-            CreateMap<DAL.Models.Student, StudentDTO>().ReverseMap();
+            // MusicInstitute.BL/Mapping/AutoMapperProfile.cs
+            // החליפי את השורה של Instrument במיפוי הזה:
+            CreateMap<DAL.Models.Instrument, InstrumentDTO>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.LessonName))
+                .ReverseMap(); // ReverseMap עדיין שימושי למיפוי הפוך
+                               // CreateMap<DAL.Models.Student, StudentDTO>().ReverseMap();
+            CreateMap<DAL.Models.Student, StudentDTO>();
+            CreateMap<StudentDTO, DAL.Models.Student>();
             CreateMap<DAL.Models.Teacher, TeacherDTO>().ReverseMap();
             CreateMap<DAL.Models.AvailableLesson, AvailableLessonDTO>().ReverseMap();
             CreateMap<TeacherUpdateDTO, DAL.Models.Teacher>();

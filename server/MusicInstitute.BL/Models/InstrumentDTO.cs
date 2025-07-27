@@ -10,7 +10,7 @@ namespace MusicInstitute.BL.Models
     {
 
         public int InstrumentId { get; set; }
-        public string LessonName { get; set; } = null!;
+        public string Name { get; set; } = null!; // <-- שינוי השם כאן
         public List<int> TeacherIds { get; set; } = new List<int>();
     }
 }

@@ -45,7 +45,7 @@ namespace MusicInstitute.BL.Api
         // פונקציה להוספת כלי נגינה
         public async Task AddInstrumentAsync(InstrumentDTO instrumentDTO)
         {
-            if (string.IsNullOrEmpty(instrumentDTO.LessonName))
+            if (string.IsNullOrEmpty(instrumentDTO.Name))
             {
                 throw new ArgumentException("Instrument name cannot be null or empty.");
             }

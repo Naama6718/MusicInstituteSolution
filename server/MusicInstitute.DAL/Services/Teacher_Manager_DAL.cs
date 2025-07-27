@@ -113,6 +113,8 @@ namespace MusicInstitute.DAL.Services
         // תמחק את הפונקציה הישנה UpdateTeacherAsync,
         // והחלף אותה בפונקציה החדשה והמשופרת הזאת:
 
+        // קובץ: MusicInstitute.DAL/Services/Teacher_Manager_DAL.cs
+
         public async Task UpdateTeacherAsync(int teacherId, string currentPassword, Teacher updatedTeacherData)
         {
             var existingTeacher = await _dbManager.Teachers
@@ -121,12 +123,15 @@ namespace MusicInstitute.DAL.Services
             if (existingTeacher == null)
                 throw new KeyNotFoundException($"Teacher with ID {teacherId} not found.");
 
-            // ודא שהסיסמה הנוכחית שהגיעה מהמשתמש נכונה
-            if (existingTeacher.TeacherPassword != currentPassword)
-                throw new UnauthorizedAccessException("Incorrect current password.");
+            // === כאן השינוי ===
+            // נבדוק את הסיסמה רק אם היא סופקה (כלומר, היא לא ריקה)
+            if (!string.IsNullOrEmpty(currentPassword))
+            {
+                if (existingTeacher.TeacherPassword != currentPassword)
+                    throw new UnauthorizedAccessException("Incorrect current password.");
+            }
 
-            // עדכון השדות של המורה הקיים עם הנתונים החדשים
-            // אנחנו לא מעדכנים את הסיסמה כאן. זה נעשה בפונקציה נפרדת.
+            // שאר הקוד נשאר זהה
             existingTeacher.FirstName = updatedTeacherData.FirstName;
             existingTeacher.LastName = updatedTeacherData.LastName;
             existingTeacher.Phone = updatedTeacherData.Phone;
